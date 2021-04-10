@@ -5,6 +5,7 @@ Chapter 2. Installing dCache
 
 +  [Installing a dCache instance](#installing-a-dcache-instance)
 
+     - [About this Guide](#about-this-guide)
      - [Prerequisites](#prerequisites)
      - [Installation of the dCache Software](#installation-of-the-dCache-software)
      - [Readying the PostgreSQL server for the use with dCache](#readying-the-postgresql-server-for-the-use-with-dcache)
@@ -20,6 +21,15 @@ The first section describes the installation of a fresh dCache instance using RP
 
   [the dCache home-page]: https://www.dcache.org/
 
+## About this Guide
+
+If you have never run dCache before then this chapter will get you started as quickly as possible, with some useful features available for you to explore.
+
+In fact, this chapter does much more than give you a bare-bones dCache deployment. It contains a number of steps, each building from the previous steps, that with give you a multi-node dCache cluster that supports multiple network protocols and multiple authentication schemes. The result will be both scalable and fault-tolerant, using dCache's highly available options.
+
+By doing this step-by-step, you have the opportunity to learn more about how dCache works and explore some of the details of dCache configuration and administration without being overwhelmed. As far as possible, you can simply copy the commands and end up with a working dCache. We've included some example commands that perform some basic tests, so you can have some confidence that everything is OK so far, before moving on to the next step.
+
+Please note that, although this chapter will provide you with a working dCache instance, you should not blindly use this chapter as a recipe for a production instance. There are many ways to configure dCache. The optimal choice depends on which hardware you wish to use and how dCache's users will interact with the system. So, we cannot give a simple, single recipe that will provide the optimal solution in all cases.
 
 ## INSTALLING A dCache INSTANCE
 
