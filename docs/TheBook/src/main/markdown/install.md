@@ -31,73 +31,61 @@ By doing this step-by-step, you have the opportunity to learn more about how dCa
 
 Please note that, although this chapter will provide you with a working dCache instance, you should not blindly use this chapter as a recipe for a production instance. There are many ways to configure dCache. The optimal choice depends on which hardware you wish to use and how dCache's users will interact with the system. So, we cannot give a simple, single recipe that will provide the optimal solution in all cases.
 
-## INSTALLING A dCache INSTANCE
+## Prerequisites
 
-In the following the installation of a dCache instance will be described. The Chimera namespace provider, some management components, and the **SRM** need a PSQL server installed. We recommend running this PSQL on the local node. The first section describes the configuration of a PSQL server. After that the installation of CHIMERA and of the dCache components will follow. During the whole installation process root access is required.
+As this chapter encompasses an expanding deployment, there is a
+minimum requirement to complete the first step, and an expanded list
+of requirements tPrerequisitesPrerequisiteso finish all the steps and reach the end of this
+chapter.
 
-### PREREQUISITES
+To make this chapter as precise and accurate as possible, we decided
+to focus on a single version of a Linux distribution: CentOS v7.
+dCache will work fine with other distributions (for example, Debian
+and Ubuntu), but the instructions and responses may be slightly
+different.
 
-In order to install dCache the following requirements must be met:
+The minimum requirement is a single computer running the latest
+CentOS-7 Linux distribution with the httpd-tools package installed.
+The general system requirements are listed is the respective Preface section [Minimum System Requirements](https://github.com/dCache/dcache/blob/master/docs/TheBook/src/main/markdown/preface.md#minimum-system-requirements).
 
--   An RPM-based Linux distribution is required for the following procedure. For Debian derived systems we provide Debian packages and for all other operating systems a tarball is available.
+The following will be installed during the process:
+ - dCache requires Java 8 JRE. Please use the latest patch-level and check for upgrades frequently. It is recommended to use JDK as dCache scripts can make use of some extra features that JDK provides to gather more diagnostic information (heap-dump, etc). This helps when tracking down bugs.
 
--   dCache requires Java 8 JRE. Please use the latest patch-level and check for upgrades frequently. It is recommended to use JDK as dCache scripts can make use of some extra features that JDK provides to gather more diagnostic information (heap-dump, etc). This helps when tracking down bugs.
-
--   PostgreSQL must be installed and running. We recommend the use of PostgreSQL version 10 (at least PostgreSQL version 9.2 is required).
+- PostgreSQL must be installed and running. We recommend the use of PostgreSQL version 10 (at least PostgreSQL version 9.2 is required).
 
     > **IMPORTANT**
     >
     > For good performance it is necessary to maintain and tune your PostgreSQL server. There are several good books on this topic, one of which is [PostgreSQL 9.0 High Performance](https://www.2ndquadrant.com/de/books/).
 
-### INSTALLATION OF THE dCache SOFTWARE
+## 1: building a basic dCache deployment
 
-The RPM packages may be installed right away, for example using the command:
+In this first step, we will deploy dCache in a minimal configuration,
+just sufficient to allow data to be written and read back using the
+HTTP/WebDAV protocol.
 
-    [root] # rpm -ivh dcache-PACKAGE-VERSION.noarch.rpm
+### 1.1 Installing prerequisite packages
 
-The actual packages are available at [https://www.dcache.org/downloads/IAgree.shtml](https://www.dcache.org/downloads/IAgree.shtml).
+First, install OpenJDK and httpd-tools packages.
 
-### READYING THE POSTGRESQL SERVER FOR THE USE WITH dCache
+```console-root
+yum install yum install -y java-1.8.0-openjdk-headless httpd-tools
+```
 
-Using a PostgreSQL server with dCache places a number of requirements on the database. You must configure PostgreSQL for use by dCache and create the necessary PostgreSQL user accounts and database structure. This section describes how to do this.
+### 1.2 Installding dCache
 
-#### Starting PSQL
+All dCache packages are available directly from our website's
+[dCache releases](https://www.dcache.org/downloads/1.9/) page, under
+the Downloads section.
 
-Install the PostgreSQL server with the tools of the operating system.
+```console-root
+rpm -ivh https://www.dcache.org/downloads/1.9/repo/##SERIES##/dcache-##VERSION##-1.noarch.rpm
+|Retrieving https://www.dcache.org/downloads/1.9/repo/##SERIES##/dcache-##VERSION##-1.noarch.rpm
+|Preparing...                          ################################# [100%]
+|Updating / installing...
+|   1:dcache-##VERSION##-1                   ################################# [100%]
+```
 
-Initialize the database directory (for PSQL version 10.1 this is `/var/lib/pgsql/10/data/ `) , start the database server, and make sure that it is started at system start-up.
-
-    [root] # service postgresql-10 initdb
-    Initializing database:                                     [  OK  ]
-    [root] # service postgresql-10 start
-    Starting postgresql-10 service:                           [  OK  ]
-
-#### Enabling local trust
-
-Perhaps the simplest configuration is to allow password-less access to the database. The following documentation assumes this to be the case.
-
-To allow local users to access PSQL without requiring a password, ensure the file `pg_hba.conf`, which (for PSQL version 10) is located in `/var/lib/pgsql/10/data`, contains the following lines.
-
-    # TYPE  DATABASE        USER            ADDRESS                 METHOD
-
-    # "local" is for Unix domain socket connections only
-    local   all             all                                     trust
-    # IPv4 local connections:
-    host    all             all             127.0.0.1/32            trust
-    # IPv6 local connections:
-    host    all             all             ::1/128                 trust
-
-> **NOTE**
->
-> Please note it is also possible to run dCache with all PSQL accounts requiring passwords. See [the section called “Configuring Access to PostgreSQL”](cookbook-postgres.md#configuring-access-to-postgresql) for more advice on the configuration of PSQL.
-
-
-**RESTARTING POSTGRESQL**
-
-If you have edited PSQL configuration files, you *must* restart PSQL for those changes to take effect. On many systems, this can be done with the following command:
-
-     [root] # # service postgresql-10 reload
-     Redirecting to /bin/systemctl reload postgresql-10.service
+####WIP
 
 ### CONFIGURING CHIMERA
 
